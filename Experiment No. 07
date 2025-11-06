@@ -1,0 +1,93 @@
+import java.util.*;
+class Node
+{
+    String word;
+    Node left, right;
+    Node(String word)
+    {
+        this.word = word;
+        left = right = null;
+    }
+}
+class SpellChecker
+{
+    Node root;
+    Node insert(Node root, String word)
+    {
+        if (root == null)
+        {
+            root = new Node(word);
+            return root;
+        }
+        if (word.compareToIgnoreCase(root.word) < 0)
+            root.left = insert(root.left, word);
+        else if (word.compareToIgnoreCase(root.word) > 0)
+            root.right = insert(root.right, word);
+        return root;
+    }
+    boolean search(Node root, String key)
+    {
+        if (root == null)
+            return false;
+        if (root.word.equalsIgnoreCase(key))
+            return true;
+        if (key.compareToIgnoreCase(root.word) < 0)
+            return search(root.left, key);
+        return search(root.right, key);
+    }
+    String findClosest(Node root, String key, String closest)
+    {
+        if (root == null)
+            return closest;
+        if (root.word.equalsIgnoreCase(key))
+            return root.word;
+        if (closest == null ||
+            Math.abs(root.word.compareToIgnoreCase(key)) <
+            Math.abs(closest.compareToIgnoreCase(key)))
+        {
+            closest = root.word;
+        }
+        if (key.compareToIgnoreCase(root.word) < 0)
+            return findClosest(root.left, key, closest);
+        else
+            return findClosest(root.right, key, closest);
+    }
+    void buildDictionary(String[] words)
+    {
+        for (String w : words)
+        {
+            root = insert(root, w);
+        }
+    }
+}
+public class SpellCheckingApp
+{
+    public static void main(String[] args)
+    {
+        Scanner sc = new Scanner(System.in);
+        SpellChecker checker = new SpellChecker();
+        System.out.print("Enter number of dictionary words: ");
+        int n = sc.nextInt();
+        sc.nextLine();
+        String[] words = new String[n];
+        System.out.println("Enter dictionary words:");
+        for (int i = 0; i < n; i++)
+        {
+            words[i] = sc.nextLine();
+        }
+        checker.buildDictionary(words);
+        System.out.print("\nEnter a word to check spelling: ");
+        String input = sc.nextLine();
+        if (checker.search(checker.root, input))
+        {
+            System.out.println(input + " is spelled correctly.");
+        }
+        else
+        {
+            String suggestion = checker.findClosest(checker.root, input, null);
+            System.out.println(input + " not found in dictionary.");
+            System.out.println("Did you mean: " + suggestion);
+        }
+        sc.close();
+    }
+}
