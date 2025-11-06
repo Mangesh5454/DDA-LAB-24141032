@@ -1,0 +1,53 @@
+public class MemoryAllocation
+{
+    static final int N = 8;
+    static int[][] memory = new int[N][N];
+    static boolean isSafe(int row, int col)
+    {
+        for (int i = 0; i < col; i++)
+            if (memory[row][i] == 1)
+                return false;
+        for (int i = row, j = col; i >= 0 && j >= 0; i--, j--)
+            if (memory[i][j] == 1)
+                return false;
+        for (int i = row, j = col; i < N && j >= 0; i++, j--)
+            if (memory[i][j] == 1)
+                return false;
+
+        return true;
+    }
+    static boolean allocateMemory(int col)
+    {
+        if (col >= N)
+            return true;
+        for (int i = 0; i < N; i++)
+        {
+            if (isSafe(i, col))
+            {
+                memory[i][col] = 1;
+                if (allocateMemory(col + 1))
+                    return true;
+                memory[i][col] = 0;
+            }
+        }
+        return false;
+    }
+    static void display()
+    {
+        System.out.println("Memory Allocation Layout");
+        System.out.println("-------------------------");
+        for (int i = 0; i < N; i++)
+        {
+            for (int j = 0; j < N; j++)
+                System.out.print((memory[i][j] == 1 ? "P " : "- "));
+            System.out.println();
+        }
+    }
+    public static void main(String[] args)
+    {
+        if (allocateMemory(0))
+            display();
+        else
+            System.out.println("Allocation failed");
+    }
+}
