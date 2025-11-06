@@ -1,0 +1,44 @@
+import java.util.*;
+class DocumentMerge
+{
+    PriorityQueue<Integer> pq;
+    DocumentMerge()
+    {
+        pq = new PriorityQueue<>();
+    }
+    void addFile(int size)
+    {
+        pq.add(size);
+    }
+    int mergeFiles()
+    {
+        int totalCost = 0;
+        while (pq.size() > 1)
+        {
+            int first = pq.poll();
+            int second = pq.poll();
+            int merged = first + second;
+            System.out.println("Merging " + first + " + " + second + " = " + merged);
+            totalCost += merged;
+            pq.add(merged);
+        }
+        return totalCost;
+    }
+}
+public class DocumentIndexing
+{
+    public static void main(String[] args)
+    {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter number of index files: ");
+        int n = sc.nextInt();
+        DocumentMerge dm = new DocumentMerge();
+        for (int i = 1; i <= n; i++)
+        {
+            System.out.print("Enter size of file " + i + ": ");
+            int size = sc.nextInt();
+            dm.addFile(size);
+        }
+        int cost = dm.mergeFiles();
+        System.out.println("\nOptimal merging cost to create master index: " + cost + " units");
+    }
