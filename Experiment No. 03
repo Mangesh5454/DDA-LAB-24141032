@@ -1,0 +1,49 @@
+import java.util.*;
+class Investment
+{
+    double amount;
+    int years;
+    double rate;
+    Investment(double amount, int years, double rate)
+    {
+        this.amount = amount;
+        this.years = years;
+        this.rate = rate;
+    }
+    double calculateCompoundProfit()
+    {
+        double finalAmount = amount * Math.pow((1 + rate / 100), years);
+        double profit = finalAmount - amount;
+        double totalProfit = profit + (profit * 0.25);
+        return totalProfit;
+    }
+    double calculateFinalAmount()
+    {
+        return amount + calculateCompoundProfit();
+    }
+    void display()
+    {
+        System.out.println("\n--- Investment Summary ---");
+        System.out.println("Investment Amount: " + amount);
+        System.out.println("Years to Invest: " + years);
+        System.out.println("Rate of Return: " + rate + "%");
+        System.out.println("Profit (with 25% bonus): " + calculateCompoundProfit());
+        System.out.println("Final Amount After " + years + " Years: " + calculateFinalAmount());
+    }
+}
+public class InvestmentDecision
+{
+    public static void main(String[] args)
+    {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter investment amount: ");
+        double amount = sc.nextDouble();
+        System.out.print("Enter number of years to invest: ");
+        int years = sc.nextInt();
+        System.out.print("Enter annual rate of return (%): ");
+        double rate = sc.nextDouble();
+        Investment inv = new Investment(amount, years, rate);
+        inv.display();
+        sc.close();
+    }
+}
