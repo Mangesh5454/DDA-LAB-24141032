@@ -1,0 +1,99 @@
+class Product 
+{
+    int id;
+    String name;
+    double price;
+    Product(int id, String name, double price) 
+    {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+    }
+    void display() 
+    {
+        System.out.println("Product ID: " + id + ", Name: " + name + ", Price: Rs." + price);
+    }
+}
+class Node 
+{
+    Product product;
+    Node left, right;
+    Node(Product product) 
+    {
+        this.product = product;
+        left = right = null;
+    }
+}
+class BST 
+{
+    Node root;
+    void insert(Product p) 
+    {
+        root = insertRec(root, p);
+    }
+    Node insertRec(Node root, Product p) 
+    {
+        if (root == null) 
+        {
+            root = new Node(p);
+            return root;
+        }
+        if (p.price < root.product.price)
+            root.left = insertRec(root.left, p);
+        else if (p.price > root.product.price)
+            root.right = insertRec(root.right, p);
+        return root;
+    }
+    Product search(double price) 
+    {
+        Node res = searchRec(root, price);
+        return (res != null) ? res.product : null;
+    }
+    Node searchRec(Node root, double price) 
+    {
+        if (root == null || root.product.price == price)
+            return root;
+        if (price < root.product.price)
+            return searchRec(root.left, price);
+        return searchRec(root.right, price);
+    }
+    void displayAll() 
+    {
+        System.out.println("Products (sorted by price):");
+        inorder(root);
+    }
+    void inorder(Node root) 
+    {
+        if (root != null) 
+        {
+            inorder(root.left);
+            root.product.display();
+            inorder(root.right);
+        }
+    }
+}
+public class ECommerceBST
+{
+    public static void main(String[] args) 
+    {
+        BST store = new BST();
+        store.insert(new Product(101, "Laptop", 55000));
+        store.insert(new Product(102, "Smartphone", 25000));
+        store.insert(new Product(103, "Smartwatch", 7000));
+        store.insert(new Product(104, "Headphones", 3000));
+        store.insert(new Product(105, "Tablet", 20000));
+        store.displayAll();
+        double searchPrice = 25000;
+        System.out.println("\nSearching for product with price Rs." + searchPrice + "...");
+        Product found = store.search(searchPrice);
+        if (found != null) 
+        {
+            System.out.println("Product Found:");
+            found.display();
+        } 
+        else 
+        {
+            System.out.println("No product found with price Rs." + searchPrice);
+        }
+    }
+}
